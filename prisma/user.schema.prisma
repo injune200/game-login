@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../node_modules/@prisma-db-1/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("USER_DATABASE_URL")
+}
+
+model Users{
+  userCode String @id @default(uuid()) @map("userCode")
+  userId  String @unique @map("userId")
+  password String @map("password")
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  Characters Characters[]
+
+  @@map("Users")
+}
+
+model Characters{
+  characterCode String @id @default(uuid()) @map("userCode")
+  characterUserCode  String @map("characterUserCode")
+  characterName  String @unique @map("characterName")
+  characterHealth Int @default(500) @map("characterHealth")
+  characterPower Int @default(100) @map("characterPower")
+  characterMoney Int @default(10000) @map("characterMoney")
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  User Users @relation(fields:[characterUserCode], references:[userCode], onDelete: Cascade)
+
+  @@map("Characters")
+}

@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "../node_modules/@prisma-db-2/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("ITEM_DATABASE_URL")
+}
+
+model Items{
+  itemId Int @id @default(autoincrement()) @map("itemId")
+  itemName String @unique @map("itemName")
+  stats ItemStats[]
+  itemPrice Int @map("itemPrice")
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  @@map("Items")
+}
+
+model ItemStats{
+  statId String @id @default(uuid()) @map("statId")
+  statItemId Int @map("statItemId")
+  itemHealth Int @default(0) @map("itemHealth")
+  itemPower Int @default(0) @map("itemPower")
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  item Items @relation(fields:[statItemId], references:[itemId], onDelete: Cascade)
+ 
+  @@map("ItemtStats")
+}
