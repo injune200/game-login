@@ -35,10 +35,41 @@ model Characters{
   characterPower Int @default(100) @map("characterPower")
   characterMoney Int @default(10000) @map("characterMoney")
 
+  CharacterInven CharacterInvens[]
+  CharacterEquip CharacterEquip[]
+
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
 
   User Users @relation(fields:[characterUserCode], references:[userCode], onDelete: Cascade)
 
   @@map("Characters")
+}
+
+model CharacterInvens{
+  invenCode String @id @default(uuid()) @map("invenCode")
+  invenCharacterCode String @map("invenCharacterCode")
+  invenItemId Int @map("invenItemId")
+  invenItemName String @map("invenItemName")
+  invenItemCount Int @map("invenItemCount")
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  Characters Characters @relation(fields:[invenCharacterCode], references:[characterCode], onDelete: Cascade)
+
+  @@map("CharacterInvens")
+}
+
+model CharacterEquip{
+  equipCode String @id @default(uuid()) @map("equipCode")
+  equipCharacterCode String @map("equipCharacterCode")
+  equipItemId Int @map("equipItemId")
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  Characters Characters @relation(fields:[equipCharacterCode], references:[characterCode], onDelete: Cascade)
+
+  @@map("CharacterEquip")
 }
